@@ -22,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import mini_project_library.controller.user.UserLoginController;
 import mini_project_library.vo.BookVO;
 import mini_project_library.vo.UserVO;
 
@@ -523,81 +524,9 @@ class PointViewStage extends Stage {
 	}
 }
 
-class BookLent extends Stage {
-	public BookLent() {
-		BorderPane bookLentBorderPane = new BorderPane();
-		bookLentBorderPane.setPrefSize(500, 500);
-		bookLentBorderPane.setPadding(new Insets(10, 10, 10, 10));
-
-		FlowPane bookLentTopFlowPane = new FlowPane();
-		bookLentTopFlowPane.setPrefSize(100, 100);
-
-		TableView<BookVO> bookTableView = new TableView<BookVO>();
-
-		TableColumn<BookVO, String> isbnColumn = new TableColumn<>("ISBN");
-		isbnColumn.setMinWidth(100);
-		isbnColumn.setCellValueFactory(new PropertyValueFactory<>("bisbn"));
-
-		TableColumn<BookVO, String> titleColumn = new TableColumn<>("TITLE");
-		titleColumn.setMinWidth(150);
-		titleColumn.setCellValueFactory(new PropertyValueFactory<>("btitle"));
-
-		TableColumn<BookVO, String> authorColumn = new TableColumn<>("AUTHOR");
-		authorColumn.setMinWidth(100);
-		authorColumn.setCellValueFactory(new PropertyValueFactory<>("bauthor"));
-
-		TableColumn<BookVO, Integer> pageColumn = new TableColumn<>("Page");
-		pageColumn.setMinWidth(100);
-		pageColumn.setCellValueFactory(new PropertyValueFactory<>("bprice"));
-
-		TableColumn<BookVO, Integer> publisherColumn = new TableColumn<>("Publisher");
-		publisherColumn.setMinWidth(150);
-		publisherColumn.setCellValueFactory(new PropertyValueFactory<>("bpublisher"));
-
-		TableColumn<BookVO, Integer> lentOkColumn = new TableColumn<>("대여 가능 여부");
-		lentOkColumn.setMinWidth(150);
-		lentOkColumn.setCellValueFactory(new PropertyValueFactory<>("book_return_date"));
-
-		TableColumn<BookVO, Integer> returnDateColumn = new TableColumn<>("반납 예정일");
-		returnDateColumn.setMinWidth(150);
-		returnDateColumn.setCellValueFactory(new PropertyValueFactory<>("book_return_date"));
-
-		bookTableView.getColumns().addAll(isbnColumn, titleColumn, authorColumn, pageColumn, publisherColumn,
-				lentOkColumn, returnDateColumn);
-
-		Label bookLentTitleLabel = new Label("도서 대여");
-		bookLentTitleLabel.setFont(Font.font("Cambria", 25));
-		bookLentTitleLabel.setPrefSize(900, 40);
-		bookLentTitleLabel.setAlignment(Pos.CENTER);
-
-		bookLentTopFlowPane.getChildren().add(bookLentTitleLabel);
-		bookLentTopFlowPane.getChildren().add(bookTableView);
-
-		FlowPane bookLentBottomFlowPane = new FlowPane();
-		bookLentBottomFlowPane.setPrefSize(920, 40);
-		bookLentBottomFlowPane.setPadding(new Insets(10, 10, 10, 10));
-		bookLentBottomFlowPane.setHgap(40);
-
-		TextField bookSearchTextField = new TextField();
-		bookSearchTextField.setPrefSize(600, 30);
-
-		Button lentButton = new Button("대여 하기");
-		lentButton.setPrefSize(220, 30);
-
-		bookLentBottomFlowPane.getChildren().add(bookSearchTextField);
-		bookLentBottomFlowPane.getChildren().add(lentButton);
-
-		bookLentBorderPane.setTop(bookLentTopFlowPane);
-		bookLentBorderPane.setBottom(bookLentBottomFlowPane);
-
-		Scene bookLentScene = new Scene(bookLentBorderPane);
-		this.setScene(bookLentScene);
-		this.show();
-	}
-}
 
 class ManagerBottomFlowPane extends FlowPane {
-	public ManagerBottomFlowPane() {
+	public ManagerBottomFlowPane(UserVO user) {
 		this.setPrefSize(300, 300);
 		this.setAlignment(Pos.CENTER);
 		Label managerPageTitleLabel = new Label("관리자 페이지 입니다");
@@ -666,8 +595,7 @@ class ManagerBottomFlowPane extends FlowPane {
 }
 
 public class Main_Page extends Application {
-	FlowPane loginBottomFlowPane = new LoginBottom_FlowPane();
-	FlowPane managerBottomFlowPane = new ManagerBottomFlowPane();
+	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -711,6 +639,7 @@ public class Main_Page extends Application {
 		loginButton.setOnAction(e -> {
 
 			UserLoginController controller = new UserLoginController();
+			//result => UserVO
 			UserVO result = controller.getResult(textFieldID.getText(), textFieldPW.getText());
 			if (result == null) {
 				System.out.println("아이디가 틀려요");
@@ -724,45 +653,7 @@ public class Main_Page extends Application {
 			} else {
 				// 스테이지 생성
 				primaryStage.close();
-				Stage loginStage = new Stage();
-				// 보더 팬 생성
-				BorderPane loginBorderPane = new BorderPane();
-				loginBorderPane.setPrefSize(300, 400);
-
-				// 플로우팬 생성 2개 Top, Bottom
-				FlowPane loginTopFlowPane = new FlowPane();
-				loginTopFlowPane.setPrefSize(300, 100);
-				Label loginTitleLabel = new Label("사용자 메뉴");
-				loginTitleLabel.setAlignment(Pos.CENTER);
-				loginTitleLabel.setPrefSize(300, 40);
-
-				Button loginPageUserButton = new Button("사용자");
-				loginPageUserButton.setPrefSize(60, 30);
-				loginTopFlowPane.setAlignment(Pos.CENTER);
-				loginPageUserButton.setOnAction(e3 -> {
-					loginBorderPane.setBottom(loginBottomFlowPane);
-				});
-
-				Label loginSpaceLabel = new Label("");
-				loginSpaceLabel.setPrefSize(40, 30);
-
-				Button loginPageManagerButton = new Button("관리자");
-				loginPageManagerButton.setPrefSize(60, 30);
-				loginPageManagerButton.setOnAction(e2 -> {
-					loginBorderPane.setBottom(managerBottomFlowPane);
-				});
-				loginTopFlowPane.getChildren().add(loginTitleLabel);
-				loginTopFlowPane.getChildren().add(loginPageUserButton);
-				loginTopFlowPane.getChildren().add(loginSpaceLabel);
-				loginTopFlowPane.getChildren().add(loginPageManagerButton);
-
-				loginBorderPane.setTop(loginTopFlowPane);
-				loginBorderPane.setBottom(loginBottomFlowPane);
-				Scene loginScene = new Scene(loginBorderPane);
-				loginStage.initModality(Modality.WINDOW_MODAL);
-				loginStage.initOwner(primaryStage);
-				loginStage.setScene(loginScene);
-				loginStage.show();
+				Stage mainMenu_Page = new MainMenu_Page(result);
 			}
 		});
 

@@ -1,4 +1,4 @@
-package mini_project_library.view;
+package mini_project_library.controller.user;
 
 import mini_project_library.service.UserService;
 import mini_project_library.vo.UserVO;

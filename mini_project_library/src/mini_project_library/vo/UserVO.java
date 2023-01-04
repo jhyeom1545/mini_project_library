@@ -10,7 +10,7 @@ public class UserVO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserVO(String user_id, String user_name, String user_password, int user_point) {
+	public UserVO(String user_id, String user_password, String user_name, int user_point) {
 		super();
 		this.user_id = user_id;
 		this.user_name = user_name;

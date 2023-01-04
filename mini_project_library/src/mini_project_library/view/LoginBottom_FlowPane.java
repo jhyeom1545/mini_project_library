@@ -5,15 +5,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-
+import mini_project_library.controller.user.FindUserController;
+import mini_project_library.vo.UserVO;
+// 유저 페이지
 public class LoginBottom_FlowPane extends FlowPane {
 	// 클래스 안에 필드 생성자 메서드
-	public LoginBottom_FlowPane() {
+	public LoginBottom_FlowPane(UserVO user) {
 //			FlowPane this = new FlowPane();
 		this.setPrefSize(300, 300);
 		this.setAlignment(Pos.CENTER);
 
-		Label loginPageTitleLabel = new Label("회원: 홍길동 | Point: 150점");
+		Label loginPageTitleLabel = new Label("회원: "+user.getUser_name()+" | "+  "Point : "+user.getUser_point() +"점");
 		Label loginBottomSpaceLabel0 = new Label();
 		loginBottomSpaceLabel0.setPrefSize(300, 20);
 
@@ -21,7 +23,7 @@ public class LoginBottom_FlowPane extends FlowPane {
 		managerPageBookLogCheckButton.setPrefSize(200, 30);
 		managerPageBookLogCheckButton.setAlignment(Pos.CENTER);
 		managerPageBookLogCheckButton.setOnAction(e -> {
-			Stage bookLentStage = new BookLent();
+			Stage bookLent_Page = new BookLent_Page();
 		});
 
 		Label loginBottomSpaceLabel = new Label();

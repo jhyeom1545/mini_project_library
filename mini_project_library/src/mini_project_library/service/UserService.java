@@ -44,7 +44,7 @@ public class UserService {
 		return result;
 	}
 
-	public boolean findUserByID(String id) {
+	public UserVO findUserByID(String id) {
 		Connection con = null;
 		try {
 			con = ConnectionPool.getDataSource().getConnection();
@@ -53,7 +53,7 @@ public class UserService {
 			e.printStackTrace();
 		}
 		UserDAO dao = new UserDAO(con);
-		boolean result = dao.findOne(id);
+		UserVO result = dao.findOne(id);
 		try {
 			con.close();
 		} catch (SQLException e) {

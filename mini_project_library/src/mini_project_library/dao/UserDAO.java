@@ -38,16 +38,16 @@ public class UserDAO {
 		return count;
 	}
 
-	public boolean findOne(String id) {
+	public UserVO findOne(String id) {
 		String sql = "SELECT * FROM user where user_id=?";
+		UserVO result = null;
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				UserVO user = new UserVO(rs.getString("user_id"), rs.getString("user_password"),
+				result = new UserVO(rs.getString("user_id"), rs.getString("user_password"),
 						rs.getString("user_name"), rs.getInt("user_point"));
-				System.out.println(user);
 				System.out.println("아이디 중복");
 			} else {
 				System.out.println("사용 가능");
@@ -57,7 +57,7 @@ public class UserDAO {
 			e.printStackTrace();
 		}
 
-		return false;
+		return result;
 	}
 
 	public UserVO login(String user_id, String user_password) {
