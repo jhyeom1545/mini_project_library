@@ -1,65 +1,85 @@
 package mini_project_library.vo;
 
 public class BookVO {
-	String bisbn;
-	String btitle;
-	String bdate;
-	int bpage;
-	String bauthor;
+	private String book_isbn;
+	private String book_title;
+	private String book_date;
+	private String book_author;
+	private String book_publisher;
+	private String book_update;
+	private String book_lent_status;
 	
 	public BookVO() {
 		// TODO Auto-generated constructor stub
 	}
-
-	public BookVO(String bisbn, String btitle, String bdate, int bpage, String bauthor) {
+	
+	public BookVO(String book_isbn, String book_title, String book_date, String book_author, String book_publisher,
+			String book_update, String book_lent_status) {
 		super();
-		this.bisbn = bisbn;
-		this.btitle = btitle;
-		this.bdate = bdate;
-		this.bpage = bpage;
-		this.bauthor = bauthor;
+		this.book_isbn = book_isbn;
+		this.book_title = book_title;
+		this.book_date = book_date;
+		this.book_author = book_author;
+		this.book_publisher = book_publisher;
+		this.book_update = book_update;
+		this.book_lent_status = book_lent_status;
 	}
 
-	public String getBisbn() {
-		return bisbn;
+	public String getBook_isbn() {
+		return book_isbn;
 	}
 
-	public void setBisbn(String bisbn) {
-		this.bisbn = bisbn;
+	public void setBook_isbn(String book_isbn) {
+		this.book_isbn = book_isbn;
 	}
 
-	public String getBtitle() {
-		return btitle;
+	public String getBook_title() {
+		return book_title;
 	}
 
-	public void setBtitle(String btitle) {
-		this.btitle = btitle;
+	public void setBook_title(String book_title) {
+		this.book_title = book_title;
 	}
 
-	public String getBdate() {
-		return bdate;
+	public String getBook_date() {
+		return book_date;
 	}
 
-	public void setBdate(String bdate) {
-		this.bdate = bdate;
+	public void setBook_date(String book_date) {
+		this.book_date = book_date;
 	}
 
-	public int getBpage() {
-		return bpage;
+	public String getBook_author() {
+		return book_author;
 	}
 
-	public void setBpage(int bpage) {
-		this.bpage = bpage;
+	public void setBook_author(String book_author) {
+		this.book_author = book_author;
 	}
 
-	public String getBauthor() {
-		return bauthor;
+	public String getBook_publisher() {
+		return book_publisher;
 	}
 
-	public void setBauthor(String bauthor) {
-		this.bauthor = bauthor;
+	public void setBook_publisher(String book_publisher) {
+		this.book_publisher = book_publisher;
 	}
-	
-	
-	
+
+	public String getBook_update() {
+		return book_update;
+	}
+
+	public void setBook_update(String book_update) {
+		this.book_update = book_update;
+	}
+
+	public String getBook_lent_status() {
+		return book_lent_status;
+	}
+
+	public void setBook_lent_status(String book_lent_status) {
+		this.book_lent_status = book_lent_status;
+	}
+
+
 }

@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import mini_project_library.controller.user.FindUserController;
 import mini_project_library.vo.UserVO;
 // 유저 페이지
 public class LoginBottom_FlowPane extends FlowPane {
@@ -23,7 +22,7 @@ public class LoginBottom_FlowPane extends FlowPane {
 		managerPageBookLogCheckButton.setPrefSize(200, 30);
 		managerPageBookLogCheckButton.setAlignment(Pos.CENTER);
 		managerPageBookLogCheckButton.setOnAction(e -> {
-			Stage bookLent_Page = new BookLent_Page();
+			Stage bookLent_Page = new BookLent_Page(user);
 		});
 
 		Label loginBottomSpaceLabel = new Label();
@@ -33,7 +32,7 @@ public class LoginBottom_FlowPane extends FlowPane {
 		loginPageLentInformButton.setPrefSize(200, 30);
 		loginPageLentInformButton.setAlignment(Pos.CENTER);
 		loginPageLentInformButton.setOnAction(e -> {
-			Stage lentInformationReturn = new LentInformationReturn();
+			Stage lentInformationReturn = new LentInformationReturn(user);
 		});
 
 		Label loginBottomSpaceLabel2 = new Label();
