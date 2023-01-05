@@ -13,25 +13,42 @@ public class BookLentService {
 	
 	public int bookLentByISBN(String bookISBN, String user_id) {
 		Connection con = null;
-		int result = 0;
-		
+		int bookLentResult=0; 
+		int bookUpdateResult=0;
 		try {
 			con = ConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
 			BookLentDAO dao = new BookLentDAO(con);
-			result = dao.createLent(bookISBN, user_id);
+			bookLentResult = dao.createLent(bookISBN, user_id);
 			BookDAO bookDao = new BookDAO(con);
-			bookDao.statusUpdate(bookISBN);
-			
+			bookUpdateResult = bookDao.statusUpdate(bookISBN);
+			if(bookLentResult==1 && bookUpdateResult==1) {
+				con.commit();
+			} else {
+				con.rollback();
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return result;
+		return bookLentResult;
 	}
 
 	public ObservableList<LentVO> lentBookSearchByUserID(String user_id) {
-		return null;
+		Connection con = null;
+		ObservableList<LentVO> list = null;
+		try {
+			con = ConnectionPool.getDataSource().getConnection();
+			BookLentDAO dao = new BookLentDAO(con);
+			list = dao.selectByUserID(user_id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return list;
 	}
 	
 	

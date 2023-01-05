@@ -1,7 +1,12 @@
 package mini_project_library.vo;
 
+import java.util.Scanner;
+
 public class LogVO {
-	int log_id;
-	int event_code;
-	String log_date;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int a = sc.nextInt();
+		int b = sc.nextInt();
+		System.out.println(a+ b);
+	}
 }

@@ -32,7 +32,7 @@ public class LoginBottom_FlowPane extends FlowPane {
 		loginPageLentInformButton.setPrefSize(200, 30);
 		loginPageLentInformButton.setAlignment(Pos.CENTER);
 		loginPageLentInformButton.setOnAction(e -> {
-			Stage lentInformationReturn = new LentInformationReturn(user);
+			Stage lentInformationReturn = new LentInformationReturn (user);
 		});
 
 		Label loginBottomSpaceLabel2 = new Label();
