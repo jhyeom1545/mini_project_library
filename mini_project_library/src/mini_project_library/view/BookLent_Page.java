@@ -67,10 +67,7 @@ class BookLent_Page extends Stage {
 		bookTableView.setRowFactory(e -> {
 			TableRow<BookVO> row = new TableRow<>();
 			row.setOnMouseClicked(e1 -> {
-				
-				// 내가 어떤 행을 클릭했는지 확인을 해야 하니..
 				BookVO book = row.getItem();
-
 				// 삭제할 책의 ISBN을 버튼이 클리되었을때 알아내야 해요!
 				bookISBN = book.getBook_isbn();
 				bookLentStatus = book.getBook_lent_status();

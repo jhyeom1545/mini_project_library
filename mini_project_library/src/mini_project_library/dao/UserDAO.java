@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import mini_project_library.vo.UserVO;
 
 public class UserDAO {
@@ -46,8 +49,8 @@ public class UserDAO {
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				result = new UserVO(rs.getString("user_id"), rs.getString("user_password"),
-						rs.getString("user_name"), rs.getInt("user_point"));
+				result = new UserVO(rs.getString("user_id"), rs.getString("user_password"), rs.getString("user_name"),
+						rs.getInt("user_point"));
 				System.out.println("아이디 중복");
 			} else {
 				System.out.println("사용 가능");
@@ -62,7 +65,7 @@ public class UserDAO {
 
 	public UserVO login(String user_id, String user_password) {
 		UserVO result = null;
-		String sql = "SELECT * from user where user_id=? and user_password=? ";
+		String sql = "SELECT * from user where user_id=? and user_password=? and is_deleted is Null ";
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, user_id);
@@ -79,6 +82,66 @@ public class UserDAO {
 		}
 
 		return result;
+	}
+
+	public int update(UserVO updateUser) {
+		int count = 0;
+		StringBuffer sql = new StringBuffer();
+		sql.append("UPDATE user SET user_name=?, user_password=?, user_point=? where user_id=? ");
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, updateUser.getUser_name());
+			pstmt.setString(2, updateUser.getUser_password());
+			pstmt.setInt(3, updateUser.getUser_point());
+			pstmt.setString(4, updateUser.getUser_id());
+			count = pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return count;
+	}
+
+	public int delete(String user_id) {
+		int count = 0;
+		String sql = "UPDATE user SET is_deleted=NOW() where user_id=? ";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user_id);
+			count = pstmt.executeUpdate();
+			pstmt.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public ObservableList<UserVO> findAll() {
+		ObservableList<UserVO> list = null;
+		String sql = "Select * FROM user ";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			list = FXCollections.observableArrayList();
+			while (rs.next()) {
+				UserVO user = new UserVO(rs.getString("user_id"),
+						rs.getString("user_password"), rs.getString("user_name"), rs.getInt("user_point"));
+				list.add(user);
+			}
+			rs.close();
+			pstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 
 }

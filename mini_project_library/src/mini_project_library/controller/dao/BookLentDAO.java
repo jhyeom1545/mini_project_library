@@ -43,14 +43,15 @@ public class BookLentDAO {
 		sql.append("SELECT * FROM book_lent l ");
 		sql.append("inner join book b ");
 		sql.append("ON L.book_isbn=B.book_isbn ");
-		sql.append("where L.user_id=? ");
+		sql.append("where L.user_id=? and l.book_lent_status=1");
 		try {
 			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, user_id);
 			ResultSet rs = pstmt.executeQuery();
 			list = FXCollections.observableArrayList();
 			while(rs.next()) {
-				LentVO lentVO = new LentVO( //
+				LentVO lentVO = new LentVO(
+						rs.getString("lent_id"), //
 						rs.getString("book_isbn"), //
 						rs.getString("book_title"), //
 						rs.getString("book_date"), //
@@ -68,6 +69,29 @@ public class BookLentDAO {
 		}
 		
 		return list;
+	}
+
+	public int update(LentVO lentBook) {
+		StringBuffer sql = new StringBuffer();
+		int count=0;
+		sql.append("UPDATE book_lent ");
+		sql.append("SET book_lent_status=0 , ");
+		sql.append("book_actural_return_date=NOW() ");
+		sql.append("where lent_id=? ");
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, lentBook.getLent_id());
+			count = pstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println(lentBook);
+		System.out.println(count);
+		return count;
 	}
 
 }

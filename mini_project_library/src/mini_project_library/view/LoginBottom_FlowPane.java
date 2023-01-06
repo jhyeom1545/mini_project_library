@@ -42,7 +42,7 @@ public class LoginBottom_FlowPane extends FlowPane {
 		loginPagePointCheckButton.setPrefSize(200, 30);
 		loginPagePointCheckButton.setAlignment(Pos.CENTER);
 		loginPagePointCheckButton.setOnAction(e -> {
-			Stage pointViewStage = new PointViewStage();
+			Stage pointViewStage = new PointView_Page(user);
 		});
 
 		Label loginBottomSpaceLabel3 = new Label();
@@ -52,7 +52,7 @@ public class LoginBottom_FlowPane extends FlowPane {
 		loginPageUserInFormationButton.setPrefSize(200, 30);
 		loginPageUserInFormationButton.setAlignment(Pos.CENTER);
 		loginPageUserInFormationButton.setOnAction(e -> {
-			Stage userInformation_Page = new UserInformation_Page();
+			Stage userInformation_Page = new UserInformation_Page(user);
 		});
 
 		this.getChildren().add(loginPageTitleLabel);

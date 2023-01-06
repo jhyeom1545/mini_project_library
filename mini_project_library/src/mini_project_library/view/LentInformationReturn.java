@@ -7,14 +7,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import mini_project_library.controller.booklent.LentBookReturnController;
 import mini_project_library.controller.booklent.LentBookSearchController;
-import mini_project_library.vo.LentVO;
+import mini_project_library.controller.point.AddPointToUserController;
 import mini_project_library.vo.LentVO;
 import mini_project_library.vo.UserVO;
 
@@ -22,8 +24,9 @@ class LentInformationReturn extends Stage {
 	LentBookSearchController controller;
 	LentBookSearchController controller2;
 	ObservableList<LentVO> list;
-	ObservableList<LentVO> list2;
+	Label lentInformation;
 	TableView<LentVO> userLentBookTable;	
+	LentVO lentBook;
 	public LentInformationReturn(UserVO user) {
 		BorderPane bookLentBorderPane = new BorderPane();
 		bookLentBorderPane.setPrefSize(500, 500);
@@ -67,9 +70,22 @@ class LentInformationReturn extends Stage {
 		
 		// 창 띄워주기
 		LentBookSearchController controller = new LentBookSearchController();
-		ObservableList<LentVO> list = controller.getResult(user.getUser_id());
+		list = controller.getResult(user.getUser_id());
 		userLentBookTable.setItems(list);
+		
+		userLentBookTable.setRowFactory(e-> {
+			TableRow<LentVO> row = new TableRow<>();
+			row.setOnMouseClicked(e1 -> {
+				
+				// 내가 어떤 행을 클릭했는지 확인을 해야 하니..
+				lentBook = row.getItem();
 
+				// 삭제할 책의 ISBN을 버튼이 클리되었을때 알아내야 해요!
+			});
+
+			return row;
+		});
+		
 		Label bookLentTitleLabel = new Label("대여 정보 조회 및 도서 반납");
 		bookLentTitleLabel.setFont(Font.font("Cambria", 25));
 		bookLentTitleLabel.setPrefSize(900, 40);
@@ -83,15 +99,25 @@ class LentInformationReturn extends Stage {
 		bookLentBottomFlowPane.setPadding(new Insets(10, 10, 10, 10));
 		bookLentBottomFlowPane.setHgap(430);
 
-		Label lentInformation = new Label("현재 ~권 대여중");
+		lentInformation = new Label("현재 "+ list.size() +"권 대여중");
 		lentInformation.setPrefSize(220, 30);
+		
 
 		Button returnButton = new Button("반납 하기");
 		returnButton.setPrefSize(220, 30);
 		returnButton.setOnAction(e-> {
-			controller2 = new LentBookSearchController();
-			list2 = controller.getResult(user.getUser_id());
+			// 반납하는 코드
+			LentBookReturnController lentBookReturnController = new LentBookReturnController();
+			lentBookReturnController.getResult(lentBook);
+
+			// 페이지 다시 로드
+			list = controller.getResult(user.getUser_id());
 			userLentBookTable.setItems(list);
+			lentInformation.setText("현재 "+ list.size() +"권 대여중");
+			
+			// 반납하면 포인트를 지급할 꺼에요 10 point
+			AddPointToUserController addPointToUserController = new AddPointToUserController();
+			addPointToUserController.getResult(user.getUser_id());
 		});
 
 		bookLentBottomFlowPane.getChildren().add(lentInformation);

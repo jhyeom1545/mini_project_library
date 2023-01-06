@@ -13,6 +13,7 @@ import mini_project_library.vo.UserVO;
 public class MainMenu_Page extends Stage {
 	FlowPane loginBottomFlowPane;
 	UserVO user;
+
 	MainMenu_Page(UserVO user) {
 //		Stage loginStage = new Stage();
 // 보더 팬 생성
@@ -32,7 +33,7 @@ public class MainMenu_Page extends Stage {
 		loginPageUserButton.setOnAction(e3 -> {
 			FlowPane loginBottomFlowPane = new LoginBottom_FlowPane(user);
 			loginBorderPane.setBottom(loginBottomFlowPane);
-					
+
 		});
 
 		Label loginSpaceLabel = new Label("");

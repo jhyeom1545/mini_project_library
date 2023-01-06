@@ -24,9 +24,11 @@ public class BookLentService {
 			bookUpdateResult = bookDao.statusUpdate(bookISBN);
 			if(bookLentResult==1 && bookUpdateResult==1) {
 				con.commit();
+				
 			} else {
 				con.rollback();
 			}
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,6 +44,7 @@ public class BookLentService {
 			con = ConnectionPool.getDataSource().getConnection();
 			BookLentDAO dao = new BookLentDAO(con);
 			list = dao.selectByUserID(user_id);
+			con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,6 +52,24 @@ public class BookLentService {
 		
 		
 		return list;
+	}
+
+	public void LentBookReturnByISBN(LentVO lentBook) {
+		Connection con = null;
+		try {
+			con = ConnectionPool.getDataSource().getConnection();
+			BookLentDAO dao = new BookLentDAO(con);
+					dao.update(lentBook);
+				
+				
+					BookDAO bookDAO = new BookDAO(con);
+				bookDAO.updateStatus(lentBook.getBook_isbn());
+				con.close();	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	

@@ -1,7 +1,7 @@
 package mini_project_library.vo;
 
 public class LentVO {
-	
+	private String lent_id;
 	private String book_isbn;
 	private String book_title;
 	private String book_date;
@@ -14,9 +14,10 @@ public class LentVO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public LentVO(String book_isbn, String book_title, String book_date, String book_author, String book_publisher,
+	public LentVO(String lent_id, String book_isbn, String book_title, String book_date, String book_author, String book_publisher,
 			String book_lent_date, String book_return_date) {
 		super();
+		this.lent_id = lent_id;
 		this.book_isbn = book_isbn;
 		this.book_title = book_title;
 		this.book_date = book_date;
@@ -27,6 +28,14 @@ public class LentVO {
 	}
 
 
+
+	public String getLent_id() {
+		return lent_id;
+	}
+
+	public void setLent_id(String lent_id) {
+		this.lent_id = lent_id;
+	}
 
 	public String getBook_isbn() {
 		return book_isbn;
@@ -70,5 +79,14 @@ public class LentVO {
 	public void setBook_return_date(String book_return_date) {
 		this.book_return_date = book_return_date;
 	}
+
+	@Override
+	public String toString() {
+		return "LentVO [lent_id=" + lent_id + ", book_isbn=" + book_isbn + ", book_title=" + book_title + ", book_date="
+				+ book_date + ", book_author=" + book_author + ", book_publisher=" + book_publisher
+				+ ", book_lent_date=" + book_lent_date + ", book_return_date=" + book_return_date + "]";
+	}
+
+
 	
 }

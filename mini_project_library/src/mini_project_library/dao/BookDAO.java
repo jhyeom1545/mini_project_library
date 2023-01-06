@@ -21,7 +21,7 @@ public class BookDAO {
 		ObservableList<BookVO> list = null;
 		// 실행할 sql
 		String sql = "SELECT * FROM book where book_title like ?";
-		
+
 		// 값을 담아줄 list선언
 		list = FXCollections.observableArrayList();
 		try {
@@ -62,5 +62,18 @@ public class BookDAO {
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+	public void updateStatus(String book_isbn) {
+		int count = 0;
+		String sql = "update book set book_lent_status='대여가능' where book_isbn=? ";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, book_isbn);
+			count = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

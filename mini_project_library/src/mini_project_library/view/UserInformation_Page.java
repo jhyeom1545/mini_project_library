@@ -3,6 +3,7 @@ package mini_project_library.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -12,9 +13,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import mini_project_library.controller.user.UpdateUserInformationController;
+import mini_project_library.controller.user.UserDeleteController;
+import mini_project_library.source.Alert_Window;
+import mini_project_library.vo.UserVO;
 
 public class UserInformation_Page extends Stage {
-	public UserInformation_Page() {
+	Label userInformationIDLabel2;
+	public UserInformation_Page(UserVO user) {
 		BorderPane userInformationBorderPane = new BorderPane();
 		userInformationBorderPane.setPrefSize(400, 800);
 		userInformationBorderPane.setPadding(new Insets(10, 50, 10, 50));
@@ -37,7 +44,7 @@ public class UserInformation_Page extends Stage {
 		Label userInformationIDLabel = new Label("유저 아이디");
 		userInformationIDLabel.setPrefSize(100, 30);
 
-		Label userInformationIDLabel2 = new Label("홍길동");
+		userInformationIDLabel2 = new Label(user.getUser_id());
 		userInformationIDLabel.setPrefSize(100, 30);
 		userInformationIDLabel.setAlignment(Pos.CENTER_LEFT);
 
@@ -52,6 +59,7 @@ public class UserInformation_Page extends Stage {
 
 		TextField userInformationNameTextField = new TextField();
 		userInformationNameTextField.setPrefSize(300, 30);
+		userInformationNameTextField.setText(user.getUser_name());
 
 		Label userInformationSpaceLabel4 = new Label("");
 		userInformationSpaceLabel4.setPrefSize(400, 10);
@@ -77,8 +85,36 @@ public class UserInformation_Page extends Stage {
 		Label userInformationSpaceLabel7 = new Label("");
 		userInformationSpaceLabel7.setPrefSize(400, 10);
 
+		
+		
+		
+		
 		Button userInformationUpdateButton = new Button("회원 정보 수정");
 		userInformationUpdateButton.setPrefSize(400, 30);
+		userInformationUpdateButton.setOnAction(e-> {
+		// 입력한 비밀번호가 서로 다르면 error 발생
+			if(userInformationPasswordTextField.getText().equals(userInformationPasswordTextField2.getText())) {
+				// 회원정보 변경 로직 실행
+				// 전송할 자료 모으기
+				String user_id = user.getUser_id();
+				String user_name = userInformationNameTextField.getText();
+				String user_password  = userInformationPasswordTextField.getText();
+				int user_point =  user.getUser_point();
+				UserVO updateUser = new UserVO(user_id,user_password, user_name, user_point);
+				
+				// 정보 새로고침
+				UpdateUserInformationController controller = new UpdateUserInformationController(); 
+				controller.getResult(updateUser);
+				
+				// TextField 비우기
+				userInformationPasswordTextField.clear();
+				userInformationPasswordTextField2.clear();
+				new Alert_Window(AlertType.CONFIRMATION,"회원 정보 수정 완료", "비밀번호 수정", "비밀번호가 수정이 완료되었습니다.");
+			} else {
+				// 경고창
+				new Alert_Window(AlertType.ERROR,"회원정보 수정 오류", "비밀번호 미일치", "비밀번호가 일치하지 않습니다.");
+			}
+		});
 
 		Label userInformationSpaceLabel8 = new Label("");
 		userInformationSpaceLabel8.setPrefSize(400, 10);
@@ -94,7 +130,26 @@ public class UserInformation_Page extends Stage {
 
 		Button deleteUserButton = new Button("유저 삭제");
 		deleteUserButton.setPrefSize(370, 30);
+		deleteUserButton.setOnAction(e-> {
+			// 체크박스 버튼이 true인지 확인
+			if(deleteUserBox.isSelected()) {
+				UserDeleteController controller = new UserDeleteController();
+				int result = controller.getResult(user.getUser_id());
+				if(result == 1 ) {
+					new Alert_Window(AlertType.CONFIRMATION,"회원 삭제", "회원 탈퇴", "회원 탈퇴가 정상적으로 진행되었습니다.");
+					
+					// 회원탈퇴 했으니까 시스템 종료
+					System.exit(1);
+					
+				} else {
+					new Alert_Window(AlertType.ERROR,"회원 삭제", "회원 탈퇴 오류", "관리자에게 문의해주세요");
+				}
+			} else {
+				new Alert_Window(AlertType.ERROR,"회원 삭제", "회원 탈퇴 오류", "회원 탈퇴를 위해 체크박스를 클릭해주세요");
+			}
+		});
 
+		// 
 		userInformationTopFlowPane.getChildren().add(userInformationTitleLabel);
 		userInformationTopFlowPane.getChildren().add(imageField);
 		userInformationTopFlowPane.getChildren().add(userInformationSpaceLabel);
