@@ -26,4 +26,18 @@ public class BookService {
 		return list;
 
 	}
+
+	public int createBook(BookVO book) {
+		Connection con = null;
+		 try {
+			con = ConnectionPool.getDataSource().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 BookDAO dao = new BookDAO(con);
+		 int result = dao.insert(book);
+				
+		return result;
+	}
 }

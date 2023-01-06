@@ -19,7 +19,6 @@ public class UserDAO {
 
 	public int create(String id, String pw, String name) {
 		int count = 0;
-//		con = null;
 		String sql = "INSERT into user values (?, ?, ?, 0)";
 		System.out.println("UserDAO " + id + " pw : " + pw + " name " + name);
 		try {

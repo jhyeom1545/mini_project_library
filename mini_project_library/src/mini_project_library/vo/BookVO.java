@@ -13,6 +13,7 @@ public class BookVO {
 		// TODO Auto-generated constructor stub
 	}
 	
+	
 	public BookVO(String book_isbn, String book_title, String book_date, String book_author, String book_publisher,
 			String book_update, String book_lent_status) {
 		super();
@@ -24,6 +25,15 @@ public class BookVO {
 		this.book_update = book_update;
 		this.book_lent_status = book_lent_status;
 	}
+	
+	public BookVO(String book_isbn, String book_title, String book_author, String book_publisher) {
+		this.book_isbn = book_isbn;
+		this.book_title = book_title;
+		this.book_author = book_author;
+		this.book_publisher = book_publisher;
+	}
+	
+	
 
 	public String getBook_isbn() {
 		return book_isbn;

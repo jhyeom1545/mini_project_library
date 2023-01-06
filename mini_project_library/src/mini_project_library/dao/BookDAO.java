@@ -76,4 +76,40 @@ public class BookDAO {
 			e.printStackTrace();
 		}
 	}
+
+	public int insert(BookVO book) {
+		int result = 0;
+		StringBuffer sql = new StringBuffer();
+		sql.append("INSERT INTO book (book_isbn, book_title, book_date, book_author, book_publisher, book_update, book_lent_status ) ");
+		sql.append("VALUES (?, ?, NOW(), ?, ?, NULL, '대여가능' ) ");
+		
+		
+//		private String book_isbn;
+//		private String book_title;
+//		private String book_date;
+//		private String book_author;
+//		private String book_publisher;
+//		private String book_update;
+//		private String book_lent_status;
+		
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, book.getBook_isbn());
+			pstmt.setString(2, book.getBook_title());
+			pstmt.setString(3, book.getBook_author());
+			pstmt.setString(4, book.getBook_publisher());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+//	1. INSERT INTO 테이블이름(필드이름1, 필드이름2, 필드이름3, ...)
+//	   VALUES (데이터값1, 데이터값2, 데이터값3, ...)
+//	2. INSERT INTO 테이블이름
+//	   VALUES (데이터값1, 데이터값2, 데이터값3, ...)
+	
+	
+	
 }
