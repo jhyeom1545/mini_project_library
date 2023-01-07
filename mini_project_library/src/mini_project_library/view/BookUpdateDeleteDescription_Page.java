@@ -3,6 +3,7 @@ package mini_project_library.view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -13,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import mini_project_library.controller.book.BookUpdateController;
+import mini_project_library.controller.book.DeleteBookController;
 import mini_project_library.source.Alert_Window;
 import mini_project_library.vo.BookVO;
 
@@ -115,7 +117,21 @@ public class BookUpdateDeleteDescription_Page extends Stage {
 		deleteUserButton.setPrefSize(370, 30);
 		deleteUserButton.setOnAction(e -> {
 			// 도서 삭제
-
+			if(deleteUserBox.isSelected()) {
+				DeleteBookController controller = new DeleteBookController();
+				String book_isbn = book.getBook_isbn();
+				int result = controller.getResult(book_isbn);
+				if (result==1) {
+					new Alert_Window(AlertType.CONFIRMATION, "도서 삭제", "도서 삭제 성공", "도서 삭제 작업이 성공하였습니다.");
+					this.close();
+				} else {
+					new Alert_Window(AlertType.ERROR,"도서 삭제", "도서 삭제 오류", "관리자에게 문의해 주세요");
+				}
+			} else {
+				new Alert_Window(AlertType.ERROR,"도서 삭제", "도서 삭제 오류", "체크 박스를 확인해 주세요");
+			}
+			
+			
 		});
 
 		userInformationTopFlowPane2.getChildren().add(userInformationTitleLabel);

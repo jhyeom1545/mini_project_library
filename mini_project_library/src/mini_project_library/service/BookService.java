@@ -63,4 +63,25 @@ public class BookService {
 		
 		return result;
 	}
+
+	public int deleteBook(String book_isbn) {
+		Connection con = null;
+		int result = 0;
+		try {
+			con = ConnectionPool.getDataSource().getConnection();
+			con.setAutoCommit(false);
+			BookDAO dao = new BookDAO(con);
+			result = dao.delete(book_isbn);
+			if(result==1) {
+				con.commit();
+			} else {
+				con.rollback();
+			}
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

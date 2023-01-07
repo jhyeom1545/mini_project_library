@@ -20,7 +20,7 @@ public class BookDAO {
 		// 초기화
 		ObservableList<BookVO> list = null;
 		// 실행할 sql
-		String sql = "SELECT * FROM book where book_title like ?";
+		String sql = "SELECT * FROM book where book_title like ? and is_deleted is null ";
 
 		// 값을 담아줄 list선언
 		list = FXCollections.observableArrayList();
@@ -124,8 +124,6 @@ public class BookDAO {
 			pstmt.setString(5, bookVO.getBook_publisher());
 			pstmt.setString(6, bookVO.getBook_lent_status());
 			pstmt.setString(7, bookVO.getBook_isbn());
-			System.out.println(pstmt);
-			System.out.println(pstmt.toString());
 			result = pstmt.executeUpdate();
 			pstmt.close();
 		} catch (SQLException e) {
@@ -133,6 +131,20 @@ public class BookDAO {
 			e.printStackTrace();
 		}
 
+		return result;
+	}
+
+	public int delete(String book_isbn) {
+		int result = 0;
+		String sql = "UPDATE book set is_deleted=NOW() where book_isbn=? ";
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setString(1, book_isbn);
+			result = pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return result;
 	}
 
