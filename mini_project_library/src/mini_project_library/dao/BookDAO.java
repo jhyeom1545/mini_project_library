@@ -72,7 +72,6 @@ public class BookDAO {
 			pstmt.setString(1, book_isbn);
 			count = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -80,18 +79,10 @@ public class BookDAO {
 	public int insert(BookVO book) {
 		int result = 0;
 		StringBuffer sql = new StringBuffer();
-		sql.append("INSERT INTO book (book_isbn, book_title, book_date, book_author, book_publisher, book_update, book_lent_status ) ");
+		sql.append(
+				"INSERT INTO book (book_isbn, book_title, book_date, book_author, book_publisher, book_update, book_lent_status ) ");
 		sql.append("VALUES (?, ?, NOW(), ?, ?, NULL, '대여가능' ) ");
-		
-		
-//		private String book_isbn;
-//		private String book_title;
-//		private String book_date;
-//		private String book_author;
-//		private String book_publisher;
-//		private String book_update;
-//		private String book_lent_status;
-		
+
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, book.getBook_isbn());
@@ -109,7 +100,40 @@ public class BookDAO {
 //	   VALUES (데이터값1, 데이터값2, 데이터값3, ...)
 //	2. INSERT INTO 테이블이름
 //	   VALUES (데이터값1, 데이터값2, 데이터값3, ...)
-	
-	
-	
+
+	public int update(BookVO bookVO) {
+		int result = 0;
+		StringBuffer sql = new StringBuffer();
+		sql.append("update book set ");
+		sql.append("book_isbn=?, ");
+		sql.append("book_title=?, ");
+		sql.append("book_date=?, ");
+		sql.append("book_author=?, ");
+		sql.append("book_publisher=?, ");
+		sql.append("book_update=NOW(), ");
+		sql.append("book_lent_status=? ");
+		sql.append("where book_isbn=? ");
+		
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, bookVO.getBook_isbn());
+			pstmt.setString(2, bookVO.getBook_title());
+			pstmt.setString(3, bookVO.getBook_date());
+			pstmt.setString(4, bookVO.getBook_author());
+			pstmt.setString(5, bookVO.getBook_publisher());
+			pstmt.setString(6, bookVO.getBook_lent_status());
+			pstmt.setString(7, bookVO.getBook_isbn());
+			System.out.println(pstmt);
+			System.out.println(pstmt.toString());
+			result = pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 }
