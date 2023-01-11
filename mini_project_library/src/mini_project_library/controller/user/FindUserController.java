@@ -5,8 +5,8 @@ import mini_project_library.vo.UserVO;
 
 public class FindUserController {
 
-	public UserVO getResult(String id) {
+	public UserVO execute(String user_id) {
 		UserService service = new UserService();
-		return service.findUserByID(id);
+		return service.findUserByID(user_id);
 	}
 }

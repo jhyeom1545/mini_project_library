@@ -1,161 +1,125 @@
 package mini_project_library.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.List;
 
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
-import mini_project_library.dao.ConnectionPool;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
 import mini_project_library.dao.UserDAO;
+import mini_project_library.mybatis.MyBatisConnectionFactory;
+import mini_project_library.vo.LoginVO;
 import mini_project_library.vo.UserVO;
 
 public class UserService {
-	public int createuser(String id, String pw, String name) {
-		Connection con = null;
+	SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
+	
+	// 유저 회원 가입
+	public int createUser(UserVO user) {
+		int result = 0;
+		SqlSession session = factory.openSession();
+		UserDAO dao = new UserDAO(session);
 		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			System.out.println("커넥션 연결!");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		UserDAO dao = new UserDAO(con);
-		System.out.println("UserService : " + "id: " + id + "pw: " + pw + "name: " + name);
-		int result = dao.create(id, pw, name);
-		if (result == 1) {
-			try {
-				con.commit();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				con.rollback();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		try {
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	public UserVO findUserByID(String id) {
-		Connection con = null;
-		try {
-			con = ConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		UserDAO dao = new UserDAO(con);
-		UserVO result = dao.findOne(id);
-		try {
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	public UserVO getLogin(String user_id, String user_password) {
-		Connection con = null;
-		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		UserDAO dao = new UserDAO(con);
-		UserVO result = dao.login(user_id, user_password);
-		try {
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-//		if (result) {
-//			con.commit();
-//		} else {
-//			con.rollback();
-//		}
-		System.out.println("userService :" + result);
-
-		return result;
-	}
-
-	public void userInformationUpdate(UserVO updateUser) {
-		Connection con = null;
-		int count = 0;
-		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-			
-			UserDAO dao = new UserDAO(con);
-			count = dao.update(updateUser);
-			if (count==1) {
-				con.commit();
+			result = dao.insert(user);
+			if (result==1) {
+				session.commit();
 			} else {
-				con.rollback();
+				session.rollback();
 			}
-			con.close();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			session.close();
 		}
+		return result;
+	}
+	
+	public UserVO findUserByID(String user_id) {
+		// 데이터베잇스 연결 하나당 하나가 정석
+		SqlSession session = factory.openSession();
+		UserDAO dao = new UserDAO(session);
+		UserVO result = null;
+		try {
+			result = dao.selectOne(user_id);
+		} catch (Exception e) {
+			
+		} finally {
+			session.close();	
+		}
+		return result;
+	}
+	// factory
+	public UserVO getLogin(LoginVO user) {
+		UserVO result = null;
+		SqlSession session = factory.openSession();
+		UserDAO dao = new UserDAO(session);
+		
+		try {
+			result = dao.select(user);
+			// user_id
+			// user_password
+		} catch (Exception e) {
+			
+		} finally {
+			session.close();
+		}
+		return result;
+	}
 
-
+	public int userUpdate(UserVO updateUser) {
+		int result = 0;
+		SqlSession session = factory.openSession();
+			UserDAO dao = new UserDAO(session);
+			try {
+				result = dao.update(updateUser);
+				if (result==1) {
+					session.commit();
+				} else {
+					session.rollback();
+				}
+			} catch (Exception e) {
+				
+			} finally {
+				session.close();	
+			}
+			return result;
 	}
 
 	public int userDelete(String user_id) {
-		Connection con = null;
-		int count = 0;
+		SqlSession session = factory.openSession();
+		int result = 0;
+		UserDAO dao = new UserDAO(session);
 		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-			UserDAO dao = new UserDAO(con);
-			count = dao.delete(user_id);
-			if (count == 1) {
-				con.commit();
+			result = dao.delete(user_id);
+			if (result==1) {
+				session.commit();
 			} else {
-				con.rollback();
+				session.rollback();
 			}
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			session.commit();
 		}
-		return count;
 		
+		return result;
+
 	}
 
-	public ObservableList<UserVO> findAllUser() {
-		Connection con = null;
-		ObservableList<UserVO> list = null;
+	public List<UserVO> findAllUser() {
+		List<UserVO> result = null;
+		// session은 여기서 사용하고 닫아야 하니까 계속 선언 해줘야 해요
+		SqlSession session = factory.openSession();
+		UserDAO dao = new UserDAO(session);
 		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-			UserDAO dao = new UserDAO(con);
-			list = dao.findAll();
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			 result = dao.selectAll();
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			session.close();
 		}
-		
-		return list;
+		return result;
 	}
+
+	
 
 }

@@ -1,146 +1,47 @@
 package mini_project_library.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
+import org.apache.ibatis.session.SqlSession;
+
+import mini_project_library.vo.LoginVO;
 import mini_project_library.vo.UserVO;
 
 public class UserDAO {
-	Connection con;
+	private SqlSession session;
 
-	public UserDAO(Connection con) {
-		this.con = con;
+	public UserDAO(SqlSession session) {
+		this.session = session;
 	}
 
-	public int create(String id, String pw, String name) {
-		int count = 0;
-		String sql = "INSERT into user values (?, ?, ?, 0)";
-		System.out.println("UserDAO " + id + " pw : " + pw + " name " + name);
-		try {
-			// DB연결
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			// 트랜젝션
-//			con.setAutoCommit(false);
-			pstmt.setString(1, id);
-			pstmt.setString(2, pw);
-			pstmt.setString(3, name);
-
-			count = pstmt.executeUpdate();
-			System.out.println("executeUpdate 실행");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return count;
+	
+	// 유저 생성
+	public int insert(UserVO user) {
+		return session.insert("library.User.insert", user);
 	}
 
-	public UserVO findOne(String id) {
-		String sql = "SELECT * FROM user where user_id=?";
-		UserVO result = null;
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				result = new UserVO(rs.getString("user_id"), rs.getString("user_password"), rs.getString("user_name"),
-						rs.getInt("user_point"));
-				System.out.println("아이디 중복");
-			} else {
-				System.out.println("사용 가능");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
+	// 유저 id로 찾기(아이디 중복 확인)
+	public UserVO selectOne(String user_id) {
+		return session.selectOne("library.User.selectOne", user_id);
 	}
 
-	public UserVO login(String user_id, String user_password) {
-		UserVO result = null;
-		String sql = "SELECT * from user where user_id=? and user_password=? and is_deleted is Null ";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, user_id);
-			pstmt.setString(2, user_password);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				result = new UserVO(rs.getString("user_id"), rs.getString("user_password"), rs.getString("user_name"),
-						rs.getInt("user_point"));
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
+	// 유저 로그인
+	public UserVO select(LoginVO user) {
+		return session.selectOne("library.User.login", user);
 	}
 
+	// 모든 회원 조회
+	public List<UserVO> selectAll() {
+		return session.selectList("library.User.selectAll");
+	}
+
+	// 유저 정보 수정
 	public int update(UserVO updateUser) {
-		int count = 0;
-		StringBuffer sql = new StringBuffer();
-		sql.append("UPDATE user SET user_name=?, user_password=?, user_point=? where user_id=? ");
-
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql.toString());
-			pstmt.setString(1, updateUser.getUser_name());
-			pstmt.setString(2, updateUser.getUser_password());
-			pstmt.setInt(3, updateUser.getUser_point());
-			pstmt.setString(4, updateUser.getUser_id());
-			count = pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return count;
+		return session.update("library.User.update", updateUser);
 	}
 
+	// 유저 삭제
 	public int delete(String user_id) {
-		int count = 0;
-		String sql = "UPDATE user SET is_deleted=NOW() where user_id=? ";
-
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, user_id);
-			count = pstmt.executeUpdate();
-			pstmt.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return count;
+		return session.delete("library.User.delete", user_id);
 	}
-
-	public ObservableList<UserVO> findAll() {
-		ObservableList<UserVO> list = null;
-		String sql = "Select * FROM user ";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rs = pstmt.executeQuery();
-			list = FXCollections.observableArrayList();
-			while (rs.next()) {
-				UserVO user = new UserVO(rs.getString("user_id"),
-						rs.getString("user_password"), rs.getString("user_name"), rs.getInt("user_point"));
-				list.add(user);
-			}
-			rs.close();
-			pstmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-
 }

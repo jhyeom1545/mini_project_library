@@ -1,86 +1,80 @@
 package mini_project_library.service;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 
-import javafx.collections.ObservableList;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
 import mini_project_library.dao.BookDAO;
-import mini_project_library.dao.ConnectionPool;
+import mini_project_library.mybatis.MyBatisConnectionFactory;
 import mini_project_library.vo.BookVO;
 
 public class BookService {
-	
+	SqlSessionFactory factory = MyBatisConnectionFactory.getSqlSessionFactory();
 
-	public ObservableList<BookVO> bookSearchByKeyword(String keyword) {
-		Connection con = null;
-		try {
-			con = ConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		BookDAO dao = new BookDAO(con);
-		ObservableList<BookVO> list = dao.selectByKeyword(keyword);
-		
-		
+	public List<BookVO> bookSearchByKeyword(String keyword) {
+		SqlSession session = factory.openSession();
+		BookDAO dao = new BookDAO(session);
+		List<BookVO> list = dao.selectByKeyword(keyword);
 		return list;
 
 	}
 
 	public int createBook(BookVO book) {
-		Connection con = null;
-		 try {
-			con = ConnectionPool.getDataSource().getConnection();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		int result = 0;
+		SqlSession session = factory.openSession();
+		BookDAO dao = new BookDAO(session);
+
+		try {
+			result = dao.insert(book);
+			if (result == 1) {
+				session.commit();
+			} else {
+				session.rollback();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			session.close();
 		}
-		 BookDAO dao = new BookDAO(con);
-		 int result = dao.insert(book);
-				
 		return result;
 	}
 
 	public int BookUpdate(BookVO bookVO) {
-		Connection con = null;
 		int result = 0;
+		SqlSession session = factory.openSession();
+		BookDAO dao = new BookDAO(session);
+		System.out.println(bookVO);
 		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-			BookDAO dao = new BookDAO(con);
 			result = dao.update(bookVO);
-			if(result==1) {
-				con.commit();
+			if (result == 1) {
+				session.commit();
 			} else {
-				con.rollback();
-				
+				session.rollback();
 			}
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			session.close();
 		}
-		
 		return result;
 	}
 
 	public int deleteBook(String book_isbn) {
-		Connection con = null;
 		int result = 0;
+		SqlSession session = factory.openSession();
+		BookDAO dao = new BookDAO(session);
 		try {
-			con = ConnectionPool.getDataSource().getConnection();
-			con.setAutoCommit(false);
-			BookDAO dao = new BookDAO(con);
 			result = dao.delete(book_isbn);
-			if(result==1) {
-				con.commit();
+			if (result == 1) {
+				session.commit();
 			} else {
-				con.rollback();
+				session.rollback();
 			}
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 		return result;
 	}

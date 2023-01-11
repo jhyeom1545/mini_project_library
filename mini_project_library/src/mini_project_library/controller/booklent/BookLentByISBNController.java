@@ -1,14 +1,14 @@
 package mini_project_library.controller.booklent;
 
-import mini_project_library.controller.service.BookLentService;
+import mini_project_library.service.BookLentService;
+import mini_project_library.vo.InsertLentBookVO;
 
 public class BookLentByISBNController {
 
-	public int getResult(String bookISBN, String user_id) {
-		int result = 0;
+	public int execute(InsertLentBookVO insertLentBook) {
 		BookLentService service = new BookLentService();
-		result = service.bookLentByISBN(bookISBN, user_id);
-		return result;
+		System.out.println("실행 확인 Controller");
+		return service.bookLentByISBN(insertLentBook);
 	}
 
 }

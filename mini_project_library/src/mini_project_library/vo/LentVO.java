@@ -9,6 +9,34 @@ public class LentVO {
 	private String book_publisher;
 	private String book_lent_date;
 	private String book_return_date;
+	private String book_lent_satus;
+	private String book_actual_return_date;
+	
+	public String getBook_lent_satus() {
+		return book_lent_satus;
+	}
+
+	public void setBookß_lent_satus(String book_lent_satus) {
+		this.book_lent_satus = book_lent_satus;
+	}
+
+	public String getBook_actual_return_date() {
+		return book_actual_return_date;
+	}
+
+	public void setBook_actual_return_date(String book_actual_return_date) {
+		this.book_actual_return_date = book_actual_return_date;
+	}
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	private String user_id;
 	
 	public LentVO() {
 		// TODO Auto-generated constructor stub
@@ -26,8 +54,7 @@ public class LentVO {
 		this.book_lent_date = book_lent_date;
 		this.book_return_date = book_return_date;
 	}
-
-
+	
 
 	public String getLent_id() {
 		return lent_id;

@@ -42,7 +42,7 @@ public class MainMenu_Page extends Stage {
 		Button loginPageManagerButton = new Button("관리자");
 		loginPageManagerButton.setPrefSize(60, 30);
 		loginPageManagerButton.setOnAction(e2 -> {
-			FlowPane managerBottomFlowPane = new ManagerBottomFlowPane(user);
+			FlowPane managerBottomFlowPane = new ManagerBottom_FlowPane(user);
 			loginBorderPane.setBottom(managerBottomFlowPane);
 		});
 		loginTopFlowPane.getChildren().add(loginTitleLabel);

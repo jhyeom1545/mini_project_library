@@ -92,4 +92,13 @@ public class BookVO {
 	}
 
 
+	@Override
+	public String toString() {
+		return "BookVO [book_isbn=" + book_isbn + ", book_title=" + book_title + ", book_date=" + book_date
+				+ ", book_author=" + book_author + ", book_publisher=" + book_publisher + ", book_update=" + book_update
+				+ ", book_lent_status=" + book_lent_status + "]";
+	}
+
+	
+
 }

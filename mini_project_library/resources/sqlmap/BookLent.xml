@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="library.BookLent">
+
+	<!-- 대출 정보를 생성합니다. -->
+	<insert id="insert" parameterType="InsertLentBook">
+		<![CDATA[
+		INSERT INTO
+			book_lent (
+				book_lent_date,
+				book_isbn,
+				user_id,
+				book_return_date)
+			VALUES (
+				NOW(),
+				#{book_isbn},
+				#{user_id},
+				DATE_ADD(NOW(), INTERVAL 7 DAY))
+		]]>
+	</insert>
+	
+	<!-- user_id에 대한 현재 대여중인 도서 리스트를 반환 -->
+	<select id="selectAllByUserID" parameterType="String" resultType="Lent">
+		<![CDATA[
+			SELECT
+				*
+			FROM book_lent L
+			INNER JOIN book B
+			ON L.book_isbn = B.book_isbn
+			WHERE L.user_id=${user_id}
+			AND l.book_lent_status=1
+		]]>
+	</select>
+	
+	<!-- 도서 정보 업데이트 -->
+	<update id="update" parameterType="BookLent">
+		<![CDATA[
+			UPDATE book_lent
+				SET book_lent_status=0,
+					book_actural_return_date=NOW()
+				WHERE lent_id=${lent_id}
+		]]>
+	</update>
+	
+	
+	<update id="updateStatus1" parameterType="String">
+		<![CDATA[
+			UPDATE book_lent
+				SET book_lent_status=0
+			WHERE book_isbn=#{book_isbn}
+		]]>
+	</update>
+	
+	<update id="updateStatus2" parameterType="String">
+		<![CDATA[
+			UPDATE book_lent
+				SET book_lent_status=1
+			WHERE book_isbn=#{book_isbn}
+		]]>
+	</update>
+	
+	
+	
+	
+	
+	<select id="selectAll" resultType="BookLent">
+		<![CDATA[
+			SELECT *
+				FROM book_lent BL
+				INNER JOIN user U on BL.user_id=U.user_id
+				INNER JOIN book b on BL.book_isbn=B.book_isbn			
+		]]>
+		<!--
+		if(rs.getBoolean("book_lent_status")==false) {
+//					book_lent_status = "대출 가능";
+//				} else {
+//					book_lent_status = "대여중";
+//				}
+//				if(rs.getString("book_actural_return_date")==null) {
+//					book_actural_return_date="반납 예정";
+//				} else {
+//					book_actural_return_date = rs.getString("book_actural_return_date");
+//				}
+		 -->
+	</select>
+	
+	
+		
+	
+	
+	
+</mapper>

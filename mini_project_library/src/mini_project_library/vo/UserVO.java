@@ -2,8 +2,8 @@ package mini_project_library.vo;
 
 public class UserVO {
 	private String user_id;
-	private String user_name;
 	private String user_password;
+	private String user_name;
 	private int user_point;
 
 	public UserVO() {
@@ -13,8 +13,8 @@ public class UserVO {
 	public UserVO(String user_id, String user_password, String user_name, int user_point) {
 		super();
 		this.user_id = user_id;
-		this.user_name = user_name;
 		this.user_password = user_password;
+		this.user_name = user_name;
 		this.user_point = user_point;
 	}
 

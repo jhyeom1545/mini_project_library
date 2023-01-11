@@ -7,8 +7,7 @@ public class BookUpdateController {
 
 	public int getResult(BookVO bookVO) {
 	BookService service = new BookService();
-	int result = service.BookUpdate(bookVO);
-		return result;
+	return service.BookUpdate(bookVO);
 	}
 
 }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="library.Book">
+	
+	<select id="selectByKeyword" parameterType="String" resultType="Book">
+		<![CDATA[
+			SELECT
+				book_isbn,
+				book_title,
+				book_date,
+				book_author,
+				book_publisher,
+				book_update,
+				book_lent_status
+			FROM book
+			WHERE book_title like '%${keyword}%'
+			AND is_deleted IS NULL;
+		]]>
+	</select>
+	
+	<select id="selectAll" resultType="HashMap">
+		<![CDATA[
+		
+		]]>
+	</select>
+	
+	<!-- 도서 정보 업데이트 -->
+	<update id="update" parameterType="Book">
+		<![CDATA[	
+			UPDATE book SET
+				book_title=#{book_title},
+				book_date=#{book_date},
+				book_author=#{book_author},
+				book_publisher=#{book_publisher}
+				book_update=NOW(),
+				book_lent_status=#{book_lent_status}
+			WHERE book_isbn=#{book_isbn}
+			]]>
+	</update>
+	
+	<!-- 상태 '대출중'으로 업데이트 -->
+	<update id="updateStatus1" parameterType="String">
+		<![CDATA[
+			UPDATE book SET
+				book_lent_status='대출중'
+			WHERE book_isbn=#{book_isbn} 			
+		]]>
+	</update>
+	
+	<!-- 상태 '대여가능'으로 업데이트 -->
+	<update id="updateStatus2" parameterType="String">
+		<![CDATA[
+			UPDATE book SET
+				book_lent_status='대여가능'
+			WHERE book_isbn=#{book_isbn}
+		]]>
+	</update>
+	
+	<!-- 도서 등록 -->
+	<insert id="insert" parameterType="Book">
+		<![CDATA[
+			INSERT INTO book
+				(book_isbn,
+				 book_title,
+				 book_date,
+				 book_author,
+				 book_publisher,
+				 book_update,
+				 book_lent_status)
+			VALUES
+				(#{book_isbn},
+				 #{book_title},
+				 NOW(),
+				 #{book_author},
+				 #{book_publisher},
+				 NULL,
+				 '대여가능')	
+		]]>
+	</insert>
+	
+	<!-- 도서 삭제 -->
+	<update id="delete" parameterType="String" >
+		<![CDATA[
+			UPDATE book SET
+				is_deleted=NOW()
+			WHERE  book_isbn=#{book_isbn}
+		]]>	
+	</update>
+	
+	
+
+</mapper>

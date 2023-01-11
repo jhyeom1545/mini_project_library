@@ -1,5 +1,9 @@
 package mini_project_library.view;
 
+import java.util.List;
+import java.util.Observable;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +31,8 @@ class BookUpdateDelte_Page extends Stage {
 	String bookLentStatus;
 	Button lentButton;
 	TextField imageField;
+	BookUpdateDeleteDescription_Page newPage;
+
 	public BookUpdateDelte_Page() {
 
 		BorderPane userInformationBorderPane = new BorderPane();
@@ -69,34 +75,25 @@ class BookUpdateDelte_Page extends Stage {
 
 		bookTableView.getColumns().addAll(isbnColumn, titleColumn, authorColumn, pageColumn, publisherColumn,
 				returnDateColumn);
-		
-		
+
 		bookTableView.setRowFactory(e -> {
 			// TableRow(테이블의 각 행)을 만들어서
 			TableRow<BookVO> row = new TableRow<>();
 			// 해당 행에 이벤트 처리를 설정한 다음
 			row.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			    @Override
-			    public void handle(MouseEvent mouseEvent) {
-			    	if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-			        	if(mouseEvent.getClickCount() == 2){
-			        		System.out.println("더블 클릭");
-			        		BookUpdateDeleteDescription_Page newPage = new BookUpdateDeleteDescription_Page(book);
-			            } else if(mouseEvent.getClickCount() == 1) {
-			            	book = row.getItem();
-			            	bookISBN = book.getBook_isbn();
-			            }
-			        }
-			    	BookSearchController controller = new BookSearchController();
-					ObservableList<BookVO> list = controller.getResult(imageField.getText());
-					bookTableView.setItems(list);
-			    }
-			    
+				@Override
+				public void handle(MouseEvent mouseEvent) {
+					if (mouseEvent.getClickCount() == 2) {
+						newPage = new BookUpdateDeleteDescription_Page(book);
+					}
+					if (mouseEvent.getClickCount() == 1) {
+						book = row.getItem();
+						bookISBN = book.getBook_isbn();
+					}
+				}
 			});
-			
 			return row;
 		});
-		
 		imageField = new TextField();
 		imageField.setPrefSize(600, 30);
 		imageField.setAlignment(Pos.CENTER);
@@ -104,12 +101,15 @@ class BookUpdateDelte_Page extends Stage {
 		Button bookSearchButton = new Button("도서 검색");
 		bookSearchButton.setPrefSize(300, 20);
 		bookSearchButton.setOnAction(e -> {
-				// 검색어를 입력하고 버튼을 누르면 검색
-				BookSearchController controller = new BookSearchController();
-				ObservableList<BookVO> list = controller.getResult(imageField.getText());
-				bookTableView.setItems(list);
+			// 검색어를 입력하고 버튼을 누르면 검색
+			BookSearchController controller = new BookSearchController();
+			List<BookVO> result = controller.execute(imageField.getText());
+			ObservableList<BookVO> list = FXCollections.observableArrayList();
+			for (BookVO book1 : result) {
+				list.add(book1);
+			}
+			bookTableView.setItems(list);
 		});
-
 
 		userInformationTopFlowPane.getChildren().add(userInformationTitleLabel);
 		userInformationTopFlowPane.getChildren().add(bookTableView);

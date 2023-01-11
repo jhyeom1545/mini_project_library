@@ -1,10 +1,12 @@
 package mini_project_library.controller.user;
 
 import mini_project_library.service.UserService;
+import mini_project_library.vo.UserVO;
 
 public class CreateUserController {
-	public int createUser(String id, String pw, String name) {
+
+	public int execute(UserVO user) {
 		UserService service = new UserService();
-		return service.createuser(id, pw, name);
+		return service.createUser(user);
 	}
 }

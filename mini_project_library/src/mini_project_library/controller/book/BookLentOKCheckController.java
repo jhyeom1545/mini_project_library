@@ -1,4 +1,4 @@
-package mini_project_library.book.controller;
+package mini_project_library.controller.book;
 
 public class BookLentOKCheckController {
 	

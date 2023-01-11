@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="library.User">
+	
+	<!-- 유저 생성 -->
+	<insert id="insert" parameterType="User">
+		<![CDATA[
+			INSERT INTO user
+				(
+					user_id,
+					user_name,
+					user_password,
+					user_point
+				)
+				VALUES (
+					#{user_id},
+					#{user_name},
+					#{user_password},
+					#{user_point}
+					)
+		]]>
+	</insert>
+	
+	<!-- 유저 id로 찾기(아이디 중복 확인) -->
+	<select id="selectOne" parameterType="String" resultType="User">
+		<![CDATA[
+			SELECT
+				user_id,
+				user_name,
+				user_password,
+				user_point
+			FROM user
+			WHERE user_id=#{user_id}
+		]]>
+	</select>
+	
+	<!--  유저 로그인 -->
+	<select id="login" parameterType="Login" resultType="User">
+	<![CDATA[
+			SELECT
+				user_id,
+				user_name,
+				user_password,
+				user_point
+				FROM user
+				WHERE user_id=#{user_id}
+				AND user_password=#{user_password}
+				AND is_deleted IS NULL 
+		]]>
+	</select>
+
+	<!-- 모든 회원 조회 -->
+	<select id="selectAll" resultType="User">
+	<![CDATA[
+			SELECT
+				user_id,
+				user_name,
+				user_password,
+				user_point
+			FROM user
+			WHERE is_deleted IS NULL
+		]]>
+	</select>
+
+	<!-- 유저 정보 업데이트 -->
+	<update id="update" parameterType="User">
+		<![CDATA[
+			UPDATE user SET
+				user_name=#{user_name},
+				user_password=#{user_password},
+				user_point=#{user_point}
+			WHERE user_id=#{user_id}
+		]]>
+	</update>
+
+
+	<!-- 유저 삭제 -->
+	<update id="delete" parameterType="String">
+	<![CDATA[
+		UPDATE user SET
+			is_deleted=NOW() WHERE user_id=#{user_id}
+		]]>
+	</update>
+	
+	
+	
+	
+	
+	
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+
+<configuration>
+	<properties resource="./driver.properties"/>
+	
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="mini_project_library.vo.BookVO" alias="Book"/>
+		<typeAlias type="mini_project_library.vo.UserVO" alias="User"/>
+		<typeAlias type="mini_project_library.vo.BookLentVO" alias="BookLent"/>
+		<typeAlias type="mini_project_library.vo.LentVO" alias="Lent"/>
+		<typeAlias type="mini_project_library.vo.LoginVO" alias="Login"/>
+		<typeAlias type="mini_project_library.vo.InsertLentBookVO" alias="InsertLentBook"/>
+	</typeAliases>
+	
+	<environments default="dev">
+		<environment id="dev">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}"/>
+	  			<property name="url" value="${url}"/>
+	  			<property name="username" value="${user}"/>
+	  			<property name="password" value="${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+		<mapper resource="./sqlmap/Book.xml"/>
+		<mapper resource="./sqlmap/User.xml"/>
+		<mapper resource="./sqlmap/BookLent.xml"/>
+	</mappers>
+	
+</configuration>

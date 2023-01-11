@@ -1,5 +1,8 @@
 package mini_project_library.view;
 
+import java.util.List;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +16,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import mini_project_library.controller.user.FindAllUserController;
-import mini_project_library.vo.UserVO;
 import mini_project_library.vo.UserVO;
 
 class UserView_Page extends Stage {
@@ -44,8 +46,21 @@ class UserView_Page extends Stage {
 
 		// 전체 유저 조회하기
 		FindAllUserController controller = new FindAllUserController();
-		ObservableList<UserVO>  list = controller.getResult();
+//		List<HashMap<String,Object>> list = controller.getResult();
+		List<UserVO> result = controller.getResult();
+//		pointTableView.setItems(list);
+		ObservableList<UserVO> list = FXCollections.observableArrayList();
+		for(UserVO user1 : result) {
+			list.add(user1);
+		}
 		pointTableView.setItems(list);
+		// 컨트롤러는 뷰에 있는 이벤트를 처리하는 곳이에요 어떤 서비스, 어떤 이벤트와 연결해야 하는지
+		// 이벤트 처리가 뷰로 와있음
+		
+		
+//		UserVO updateUser = new UserVO(1231,123);
+//		controller.execue(updateUser)
+
 		
 		
 		// 포인트 내역 조회

@@ -1,26 +1,29 @@
 package mini_project_library.view;
 
+import java.util.List;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import mini_project_library.book.controller.BookLentOKCheckController;
 import mini_project_library.controller.book.BookSearchController;
 import mini_project_library.controller.booklent.BookLentByISBNController;
 import mini_project_library.vo.BookVO;
+import mini_project_library.vo.InsertLentBookVO;
 import mini_project_library.vo.UserVO;
 
 class BookLent_Page extends Stage {
@@ -101,7 +104,11 @@ class BookLent_Page extends Stage {
 		bookSearchTextField.setOnAction(e -> {
 			// TextField에서 검색어를 입력하고 엔터치면 검색
 			BookSearchController controller = new BookSearchController();
-			ObservableList<BookVO> list = controller.getResult(bookSearchTextField.getText());
+			List<BookVO> result = controller.execute(bookSearchTextField.getText());
+			ObservableList<BookVO> list = FXCollections.observableArrayList(); 
+			for(BookVO book1 : result) {
+				list.add(book1);
+			}
 			bookTableView.setItems(list);
 		});
 
@@ -110,7 +117,11 @@ class BookLent_Page extends Stage {
 		searchButton.setOnAction(e -> {
 			// 검색어를 입력하고 버튼을 누르면 검색
 			BookSearchController controller = new BookSearchController();
-			ObservableList<BookVO> list = controller.getResult(bookSearchTextField.getText());
+			List<BookVO> result = controller.execute(bookSearchTextField.getText());
+			ObservableList<BookVO> list = FXCollections.observableArrayList(); 
+			for(BookVO book1 : result) {
+				list.add(book1);
+			}
 			bookTableView.setItems(list);
 		});
 
@@ -118,13 +129,25 @@ class BookLent_Page extends Stage {
 		lentButton = new Button("대여 하기");
 		lentButton.setPrefSize(140, 30);
 		lentButton.setOnAction(e -> {
-			// 책 빌리기!
+			// 도서 대여 컨트롤러
 			BookLentByISBNController controller = new BookLentByISBNController();
-			int result = controller.getResult(bookISBN, user.getUser_id());
+			String book_isbn = bookISBN;
+			String user_id = user.getUser_id();
+			
+			InsertLentBookVO insertLentBook = new InsertLentBookVO(book_isbn,user_id ); 
+			
+			// 책 빌리기!
+			System.out.println("책빌리기 실행 전");
+			int result = controller.execute(insertLentBook);
+			System.out.println("책빌리기 실행 후");
 			if (result == 1) {
 				// 리스트 새로고침
 				BookSearchController bookSearchController = new BookSearchController();
-				ObservableList<BookVO> list = bookSearchController.getResult(bookSearchTextField.getText());
+				List<BookVO> bookResult = bookSearchController.execute(bookSearchTextField.getText());
+				ObservableList<BookVO> list = FXCollections.observableArrayList(); 
+				for(BookVO book1 : bookResult) {
+					list.add(book1);
+				}
 				bookTableView.setItems(list);
 
 				// 확인창 출력

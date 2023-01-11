@@ -93,9 +93,10 @@ public class BookUpdateDeleteDescription_Page extends Stage {
 			);
 			BookUpdateController controller = new BookUpdateController();
 			int result = controller.getResult(bookVO);
+			
 			if(result==1) {
 				new Alert_Window(AlertType.CONFIRMATION, "도서 수정", "도서 수정 완료", "도서 정보 수정이 완료되었습니다.");
-				this.close();
+//				this.close();
 			} else {
 				new Alert_Window(AlertType.ERROR, "도서 수정", "도서 수정 오류 발생", "도서 정보 수정에 실패하였습니다.");
 			}
@@ -130,8 +131,6 @@ public class BookUpdateDeleteDescription_Page extends Stage {
 			} else {
 				new Alert_Window(AlertType.ERROR,"도서 삭제", "도서 삭제 오류", "체크 박스를 확인해 주세요");
 			}
-			
-			
 		});
 
 		userInformationTopFlowPane2.getChildren().add(userInformationTitleLabel);
@@ -165,5 +164,6 @@ public class BookUpdateDeleteDescription_Page extends Stage {
 		this.setScene(userInformationScene2);
 		this.show();
 	}
+	
 
 }
