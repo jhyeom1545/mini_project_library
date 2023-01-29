@@ -121,7 +121,7 @@ class BookLent_Page extends Stage {
 			ObservableList<BookVO> list = FXCollections.observableArrayList(); 
 			for(BookVO book1 : result) {
 				list.add(book1);
-			}
+			} // 
 			bookTableView.setItems(list);
 		});
 
